@@ -13,6 +13,9 @@ spec:
   - port: {{ .Values.service.webport }}
     protocol: TCP
     targetPort: 80
+  - port: {{ .Values.service.sshport }}
+    protocol: TCP
+    targetPort: 22
   selector:
     app: {{ .Chart.Name }}
 status:
