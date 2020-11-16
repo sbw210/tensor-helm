@@ -15,11 +15,8 @@ image:
 volume: []
   - name: hpe-nginx          # 볼륨이름
     path: /usr/share/nginx   # 마운트 경로 (ex. /usr/share/nginx)
+    claim: example-volume    # PVC 이름
 
-pv: 
-  name:                      # pv이름
-  claim:                     # pvc명 매칭
-  
 ## Service Part ##  
 service:
   type: LoadBalancer
