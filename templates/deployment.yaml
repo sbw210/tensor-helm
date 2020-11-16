@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: {{ .Chart.name }}                # ehost-nginx / Deployment 파드를 그룹핑 (ehost의 nginx용 파드)
+    app: {{ .Chart.name }}                # service-nginx / Deployment 파드를 그룹핑 (서비스용 nginx용 파드)
   name: {{ .Values.name }}                # 고객명을 써서 Deployment Pod를 구분
   namespace: {{ .Values.name }}           # 고객 관리용 네임스페이스 = 이름과 동일하게
 spec:
