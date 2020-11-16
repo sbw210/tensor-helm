@@ -19,27 +19,25 @@ spec:
         app: {{ .Values.label }}          # 해당 deployment로 관리되는 pod에 붙일 라벨명 (고객명+숫자)
     spec:
       containers:
-      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"   #{이미지Repo명}:{이미지Tag/디폴트는 Chart.AppVersion을 따름)}
         name: {{ .Values.name }}.{{ .Chart.Name }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지
         ports: 
           - containerPort: {{ .Values.service.port }}
             name: http
+          - containerPort: {{ .Values.ssh.port }}
+            name: ssh
         resources:
           limits:
             memory: "{{ .Values.memory.limits }}"
           requests:
             memory: "{{ .Values.memory.requests }}"
         volumeMounts:
-          {{- range .Values.secretMounts }}
+          {{- range .Values.volume }}
           - name: {{ .name }}
             mountPath: {{ .path }}
-            {{- if .subPath }}
           {{- end }}
-          {{- range $path, $config := .Values.apmConfig }}
-          - name: apm-server-config
-            mountPath: /usr/share/apm-server/{{ $path }}
-            readOnly: true
-          {{- end -}}
-         
-           
+      volumes:
+      - name: {{ .Values.pv.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.pv.claim }}
