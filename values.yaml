@@ -1,0 +1,11 @@
+replicaCount: 1                 # 이것도 default 함수로 수정해도됨
+name: client                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)
+label: nginx-client             # 그룹핑  (--set옵션으로 수정배포 가능)
+image:
+  repository: nginx             # nginx용 차트기때문에 기본 repo는 nginx
+  pullPolicy: Always
+  tag: ""                       # 디폴트값은 Chart.yaml의 appVersion을 따름
+service:
+  type: LoadBalancer
+annotations:
+  group: 2731                   # 디폴트 Metal-lb  IP-pool은 test이며, --set옵션으로 변경가능
