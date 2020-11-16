@@ -3,21 +3,43 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: {{ .Values.label }}
-  name: {{ .Values.name }}
+    app: {{ .Chart.name }}                # ehost-nginx / Deployment 파드를 그룹핑 (ehost의 nginx용 파드)
+  name: {{ .Values.name }}                # 고객명을 써서 Deployment Pod를 구분
+  namespace: {{ .Values.name }}           # 고객 관리용 네임스페이스 = 이름과 동일하게
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount }}    # 복제본 개수 (default는 1로)
   selector:
     matchLabels:
-      app: {{ .Values.label }}
+      app: {{ .Values.label }}            # 해당 deployment로 관리되는 pod에 붙일 라벨명 (고객명+숫자)
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: {{ .Values.label }}
+        app: {{ .Values.label }}          # 해당 deployment로 관리되는 pod에 붙일 라벨명 (고객명+숫자)
     spec:
       containers:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        name: {{ .Chart.Name }}
+        name: {{ .Values.name }}.{{ .Chart.Name }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports: 
+          - containerPort: {{ .Values.service.port }}
+            name: http
+        resources:
+          limits:
+            memory: "{{ .Values.memory.limits }}"
+          requests:
+            memory: "{{ .Values.memory.requests }}"
+        volumeMounts:
+          {{- range .Values.secretMounts }}
+          - name: {{ .name }}
+            mountPath: {{ .path }}
+            {{- if .subPath }}
+          {{- end }}
+          {{- range $path, $config := .Values.apmConfig }}
+          - name: apm-server-config
+            mountPath: /usr/share/apm-server/{{ $path }}
+            readOnly: true
+          {{- end -}}
+         
+           
