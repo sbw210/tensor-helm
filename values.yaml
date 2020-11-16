@@ -4,17 +4,17 @@ label: hpe-nginx             # 그룹핑  (--set옵션으로 수정배포 가능
 replicaCount: 1                 
 
 image:
-  repository: nginx          # nginx용 차트기때문에 기본 repo는 nginx
+  repository: jiyeon9569     # nginx용 차트기때문에 기본 repo는 nginx
   pullPolicy: Always
   tag: ""                    # 디폴트값은 Chart.yaml의 appVersion을 따름
 
-memory:
-  limits:                    # Mi, Gi 등 단위 설정해서 기입
-  requests: 
+# memory:
+#   limits:                  # Mi, Gi 등 단위 설정해서 기입
+#   requests: 
  
 volume: []
-  - name:                    # 볼륨이름
-    path:                    # 마운트 경로 (ex. /usr/share/nginx)
+  - name: hpe-nginx          # 볼륨이름
+    path: /usr/share/nginx   # 마운트 경로 (ex. /usr/share/nginx)
 
 pv: 
   name:                      # pv이름
@@ -23,8 +23,8 @@ pv:
 ## Service Part ##  
 service:
   type: LoadBalancer
-  webport:                   # 외부노출 웹 포트 (포트포워딩용)
-  sshport:                   # 외부노출 ssh 포트 (포트포워딩용)
+  webport: 8080              # 외부노출 웹 포트 (포트포워딩용)
+  sshport: 2122              # 외부노출 ssh 포트 (포트포워딩용)
   
 annotations:
   group: 2731                # 디폴트 Metal-lb  IP-pool은 test이며, --set옵션으로 변경가능
