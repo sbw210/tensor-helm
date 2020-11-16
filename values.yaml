@@ -1,11 +1,31 @@
-replicaCount: 1                 # 이것도 default 함수로 수정해도됨
-name: client                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)
-label: nginx-client             # 그룹핑  (--set옵션으로 수정배포 가능)
+## Deployment Part ##
+name: hpe                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 네임스페이스명과 동일하게 갈것임
+label: hpe-nginx             # 그룹핑  (--set옵션으로 수정배포 가능) // HPE에서 사용하는 Nginx라는것을 알수있게 [고객명-서비스명] 
+replicaCount: 1                 
+
 image:
-  repository: nginx             # nginx용 차트기때문에 기본 repo는 nginx
+  repository: nginx          # nginx용 차트기때문에 기본 repo는 nginx
   pullPolicy: Always
-  tag: ""                       # 디폴트값은 Chart.yaml의 appVersion을 따름
+  tag: ""                    # 디폴트값은 Chart.yaml의 appVersion을 따름
+
+memory:
+  limits:                    # Mi, Gi 등 단위 설정해서 기입
+  requests: 
+ 
+volume: []
+  - name:                    # 볼륨이름
+    path:                    # 마운트 경로 (ex. /usr/share/nginx)
+
+pv: 
+  name:                      # pv이름
+  claim:                     # pvc명 매칭
+  
+## Service Part ##  
 service:
   type: LoadBalancer
+  webport:                   # 외부노출 웹 포트 (포트포워딩용)
+  sshport:                   # 외부노출 ssh 포트 (포트포워딩용)
+  
 annotations:
-  group: 2731                   # 디폴트 Metal-lb  IP-pool은 test이며, --set옵션으로 변경가능
+  group: 2731                # 디폴트 Metal-lb  IP-pool은 test이며, --set옵션으로 변경가능
+   
