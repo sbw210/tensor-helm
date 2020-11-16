@@ -1,20 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   annotations:
     metallb.universe.tf/address-pool: {{ .Values.annotations.group }}
   labels:
-    app: {{ .Values.label }}
+    app: {{ .Chart.Name }}
     app.kubernetes.io/managed-by: Helm
   name: {{ .Values.name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: 80
+  - port: {{ .Values.service.webport }}
     protocol: TCP
     targetPort: 80
   selector:
-    app: {{ .Values.label }}
+    app: {{ .Chart.Name }}
 status:
   loadBalancer: {}
