@@ -1,2 +1,2 @@
 # bigbang
-test for kubernetes platform
+Service Helm Chart for kubernetes platform testing
