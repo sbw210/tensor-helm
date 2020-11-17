@@ -2,22 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    metallb.universe.tf/address-pool: {{ .Values.annotations.group }}
+    metallb.universe.tf/address-pool: {{ .Values.annotations.group }}     # Metallb에서 가져올 Address-Pool Name 설정
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ .Values.label }}                    # 서비스용도로 표기됨 (kubectl get svc 정보에서 svc의 용도를 파악하기쉽게 ex. nginx같은거)
     app.kubernetes.io/managed-by: Helm
-  name: {{ .Values.name }}
-  namespace: {{ .Values.name }}
+  name: {{ .Values.name }}                      # SVC 이름 생성 >> Values.name은 고객명
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type | default LoadBalancer }}         # 서비스타입으로 default LoadBalancer로 설정
   ports:
-  - port: {{ .Values.service.webport }}
+  - port: {{ .Values.service.webport }}         # 외부 노출 웹포트
     protocol: TCP
     targetPort: 80
-  - port: {{ .Values.service.sshport }}
+  - port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
     protocol: TCP
     targetPort: 22
   selector:
-    app: {{ .Chart.Name }}
+    app: {{ .Values.label }}   # 해당 Selector 정보를 Label로 가지고 있는 Pod에 이 svc를 매칭. deployment.yaml의 spec.template.metadata.labels와 맞춰주자
 status:
   loadBalancer: {}
