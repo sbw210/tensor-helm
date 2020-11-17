@@ -1,36 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
-    app: {{ .Chart.Name }}                # service-nginx / Deployment 파드를 그룹핑 (서비스용 nginx용 파드)
-  name: {{ .Values.name }}                # 고객명을 써서 Deployment Pod를 구분
-  namespace: {{ .Values.name }}           # 고객 관리용 네임스페이스 = 이름과 동일하게
+    app: {{ .Chart.Name }}                # Chart.Name은 서비스 용도 구분용/ Deployment 파드 간 구분 (서비스-nginx용 디플로이먼트오브젝트다)
+  name: {{ .Values.name }}                # 고객명 기입 (결과물은 Name : deployment.app/{Values.Name} 으로 확인가능)
 spec:
-  replicas: {{ .Values.replicaCount }}    # 복제본 개수 (default는 1로)
+  replicas: {{ .Values.replicaCount }}    # 복제본 개수 (default는 1로 설정)
   selector:
     matchLabels:
-      app: {{ .Values.label }}            # 해당 deployment로 관리되는 pod에 붙일 라벨명 (고객명+숫자)
-  strategy: {}
+      app: {{ .Values.label }}            # spec.selector.matchLabels 필드는 디플로이먼트가 관리할 Pod를 찾는 방법을 정의.
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: {{ .Values.label }}          # 해당 deployment로 관리되는 pod에 붙일 라벨명 (고객명+숫자)
+        app: {{ .Values.label }}          # 디플로이먼트에서 생성하는 Pod에 붙일 레이블명으로 위 spec.selector.matchLabels와 동일하게함
     spec:
       containers:
-      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"   #{이미지Repo명}:{이미지Tag/디폴트는 Chart.AppVersion을 따름)}
-        name: {{ .Values.name }}.{{ .Chart.Name }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지
+      - image: "{{ .Values.image.repository }}/{{ .Values.image.tag | default .Chart.AppVersion }}"   # {Repository}/{이미지이름}으로 이미지명 초기값은 Chart.AppVersion을 따르도록 구성)
+        name: {{ .Values.name }}-{{ .Chart.Name }}              # 컨테이너에 붙을 이름. 결과적으로 {고객명}-{서비스용도}로 작성됨
+        imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지 규칙 선택
         ports: 
-          - containerPort: 80
+          - containerPort: 80             # nginx + ssh 컨테이이너이므로 80, 22 Open
             name: http
           - containerPort: 22
             name: ssh
         volumeMounts:
-          - name: {{ .Values.volume.name }}
-            mountPath: {{ .Values.volume.path }}        
+          - name: {{ .Values.volume.name }}         # spec.template.volumes에서 선언한 볼륨 name을 컨테이너에 가져와서 사용
+            mountPath: {{ .Values.volume.path }}    # 실제 생성하는 컨테이너안에서 확인 할 수 있는 Mount 경로    
       volumes:
-      - name: {{ .Values.volume.name }}
+      - name: {{ .Values.volume.name }}             # 사용할 volume을 정의. 이름 생성 >> volumeMounts아래 필드에서 사용할 수 있도록 선언해줌
         persistentVolumeClaim:
-          claimName: {{ .Values.volume.claim }}
+          claimName: {{ .Values.volume.claim }}     # 생성되어있는 PVC 중 원하는 것을 가져옴.
