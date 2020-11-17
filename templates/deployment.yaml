@@ -18,6 +18,13 @@ spec:
       - image: "{{ .Values.image.repository }}/{{ .Values.image.name | default .Chart.AppVersion }}"   # {Repository}/{이미지이름}으로 이미지명 초기값은 Chart.AppVersion을 따르도록 구성)
         name: {{ .Values.name }}-{{ .Chart.Name }}              # 컨테이너에 붙을 이름. 결과적으로 {고객명}-{서비스용도}로 작성됨
         imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지 규칙 선택
+        resources:
+          requests:                                   # resources의 cpu는 core(개) 단위로 보통 할당하지만 소숫점단위 0.x로도 가능
+            cpu: "{{ .Values.cpu.requests }}"         # resources의 memory는 단위를 지정해주는것이 보통 Mi or Gi
+            memory: "{{ .Values.memory.requests }}"
+          limits:
+            cpu: "{{ .Values.cpu.limits }}"
+            memory: "{{ .Values.memory.limits }}"
         ports: 
           - containerPort: 80             # nginx + ssh 컨테이이너이므로 80, 22 Open
             name: http
