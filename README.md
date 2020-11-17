@@ -1,3 +1,4 @@
 # Nginx-Helm
 Service Helm Chart for kubernetes platform testing
-NginX 서비스 테스트용 차트
+
+가상의 고객 >> Nginx 서비스 생성 Chart 시뮬
