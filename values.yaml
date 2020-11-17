@@ -8,9 +8,13 @@ image:
   pullPolicy: Always
   name: ""                    # 디폴트값은 Chart.yaml의 appVersion을 따름
 
-# memory:
-#   limits:                  # Mi, Gi 등 단위 설정해서 기입
-#   requests: 
+cpu: 
+  limits: 2
+  requests: 1
+
+memory: 
+  limits: 2000Mi                 # Mi, Gi 등 단위 설정해서 기입
+  requests: 1000Mi
  
 volume:
   name: hpe-nginx           # 생성할 볼륨 이름
