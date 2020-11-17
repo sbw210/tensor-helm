@@ -15,7 +15,7 @@ spec:
         app: {{ .Values.label }}          # 디플로이먼트에서 생성하는 Pod에 붙일 레이블명으로 위 spec.selector.matchLabels와 동일하게함
     spec:
       containers:
-      - image: "{{ .Values.image.repository }}/{{ .Values.image.tag | default .Chart.AppVersion }}"   # {Repository}/{이미지이름}으로 이미지명 초기값은 Chart.AppVersion을 따르도록 구성)
+      - image: "{{ .Values.image.repository }}/{{ .Values.image.name | default .Chart.AppVersion }}"   # {Repository}/{이미지이름}으로 이미지명 초기값은 Chart.AppVersion을 따르도록 구성)
         name: {{ .Values.name }}-{{ .Chart.Name }}              # 컨테이너에 붙을 이름. 결과적으로 {고객명}-{서비스용도}로 작성됨
         imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지 규칙 선택
         ports: 
