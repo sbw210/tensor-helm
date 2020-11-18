@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Chart.Name }}                # Chart.Name은 서비스 용도 구분용/ Deployment 파드 간 구분 (서비스-nginx용 디플로이먼트오브젝트다)
+    app: {{ .Chart.Name }}                # Chart.Name은 서비스 용도 구분용/ Deployment 파드 간 구분 (서비스-tensorflow용 디플로이먼트오브젝트다)
   name: {{ .Values.name }}                # 고객명 기입 (결과물은 Name : deployment.app/{Values.Name} 으로 확인가능)
 spec:
   replicas: {{ .Values.replicaCount }}    # 복제본 개수 (default는 1로 설정)
@@ -26,8 +26,6 @@ spec:
             cpu: "{{ .Values.cpu.limits }}"
             memory: "{{ .Values.memory.limits }}"
         ports: 
-          - containerPort: 80             # nginx + ssh 컨테이이너이므로 80, 22 Open
-            name: http
           - containerPort: 22
             name: ssh
         volumeMounts:
