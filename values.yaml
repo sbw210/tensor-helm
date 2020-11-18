@@ -1,6 +1,6 @@
 ## Deployment Part ##
-name: hpe                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 향후 네임스페이스명과 동일하게 갈것
-label: hpe-nginx             # HPE고객에서 사용하는 Nginx 서비스라는것을 알수있게 [고객명(name)-서비스명으로 생성] 
+name: it                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 향후 네임스페이스명과 동일하게 갈것
+label: it-tensorflow             # HPE고객에서 사용하는 Nginx 서비스라는것을 알수있게 [고객명(name)-서비스명으로 생성] 
 replicaCount: 1                 
 
 image:
@@ -17,16 +17,15 @@ memory:
   requests: 1000Mi
  
 volume:
-  name: hpe-nginx           # 생성할 볼륨 이름
-  path: /usr/share/nginx    # 마운트 경로 (ex. /usr/share/nginx)
-  claim: example-volume     # PVC 이름
+  name: it-tensorflow           # 생성할 볼륨 이름
+  path: /data               # 마운트 경로 (ex. /usr/share/nginx)
+  claim: tensor-volume     # PVC 이름
 
 ## Service Part ##  
 service:
   type: ""                   # service.yaml에 default값 LoadBalancer로 기입되어있음. 다른용도일시 변경필요.
-  webport: 80                # 외부노출 웹 포트 (포트포워딩용)
   sshport: 22                # 외부노출 ssh 포트 (포트포워딩용)
   
 annotations:
-  group: web                 # 디폴트 Metal-lb  IP-pool은 default이며, --set옵션으로 변경가능
+  group: gpu                 # 디폴트 Metal-lb  IP-pool은 default이며, --set옵션으로 변경가능
    
