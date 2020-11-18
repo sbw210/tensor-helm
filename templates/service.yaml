@@ -10,9 +10,6 @@ metadata:
 spec:
   type: {{ .Values.service.type | default LoadBalancer }}         # 서비스타입으로 default LoadBalancer로 설정
   ports:
-  - port: {{ .Values.service.webport }}         # 외부 노출 웹포트
-    protocol: TCP
-    targetPort: 80
   - port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
     protocol: TCP
     targetPort: 22
