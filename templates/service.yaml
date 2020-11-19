@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
   name: {{ .Values.name }}                      # SVC 이름 생성 >> Values.name은 고객명
 spec:
-  type: {{ .Values.service.type | default LoadBalancer }}         # 서비스타입으로 default LoadBalancer로 설정
+  type: {{ .Values.service.type | default "LoadBalancer" }}         # 서비스타입으로 default LoadBalancer로 설정
   ports:
   - port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
     protocol: TCP
