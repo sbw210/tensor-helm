@@ -25,7 +25,20 @@ volume:
 service:
   type: ""                   # service.yaml에 default값 LoadBalancer로 기입되어있음. 다른용도일시 변경필요.
   sshport: 22                # 외부노출 ssh 포트 (포트포워딩용)
+  jupyterport: 8888
   
 annotations:
   group: gpu                 # 디폴트 Metal-lb  IP-pool은 default이며, --set옵션으로 변경가능
-   
+
+## Persistent Volume Part ##
+
+persistence:
+  enabled: true
+    ## false면 pvc.yaml 실행 안함
+    ## StorageClass를 사용하고싶으면 주석해제 필요 
+    ## StorageClass값이 "-"이면 ""을 반환하고 동적프로비저닝을 금지시킴(disable)
+    ## StorageClass값을 입력해주면 해당 stc로 Bound될 것
+  # storageClass: "-"
+  storageClass: "rook-ceph-block"
+  accessMode: ReadWriteOnce
+  size: 2Gi
