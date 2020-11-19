@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: {{ .Values.volume.claim }}
   labels:
-    app: {{ .Valuese.label }}
+    app: {{ .Values.label }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"   
 spec:
   accessModes:
