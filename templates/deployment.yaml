@@ -26,6 +26,8 @@ spec:
             cpu: "{{ .Values.cpu.limits }}"
             memory: "{{ .Values.memory.limits }}"
         ports: 
+          - containerPort: 8888
+            name: jupyter                           ## 주피터 노트북 사용시 8888 포트도 오픈할것
           - containerPort: 22
             name: ssh
         volumeMounts:
