@@ -33,5 +33,9 @@ spec:
             mountPath: {{ .Values.volume.path }}    # 실제 생성하는 컨테이너안에서 확인 할 수 있는 Mount 경로    
       volumes:
       - name: {{ .Values.volume.name }}             # 사용할 volume을 정의. 이름 생성 >> volumeMounts아래 필드에서 사용할 수 있도록 선언해줌
+      {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.volume.claim }}     # 생성되어있는 PVC 중 원하는 것을 가져옴.
+          claimName: {{ .Values.persistence.existingClaim | default .Values.volume.claim }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
