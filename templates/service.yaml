@@ -10,12 +10,14 @@ metadata:
 spec:
   type: {{ .Values.service.type | default "LoadBalancer" }}         # 서비스타입으로 default LoadBalancer로 설정
   ports:
-  - port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
+  - name: ssh
+    port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
     protocol: TCP
     targetPort: 40022
-  - port: {{ .Values.service.jupyterport }}     # 외부 노출 SSH포트
+  - name: jupyter
+    port: {{ .Values.service.jupyterport }}     # 외부 노출 주피터 노트북 포트
     protocol: TCP
-    targetPort: 8888                            # 외부 노출 주피터 노트북 포트
+    targetPort: 8888                          
   selector:
     app: {{ .Values.label }}   # 해당 Selector 정보를 Label로 가지고 있는 Pod에 이 svc를 매칭. deployment.yaml의 spec.template.metadata.labels와 맞춰주자
 status:
