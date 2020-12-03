@@ -1,6 +1,6 @@
 ## Deployment Part ##
-name: it                    # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 향후 네임스페이스명과 동일하게 갈것
-label: it-tensorflow             # HPE고객에서 사용하는 Nginx 서비스라는것을 알수있게 [고객명(name)-서비스명으로 생성] 
+name: ehost                         # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 향후 네임스페이스명과 동일하게 갈것
+label: ehost-tensorflow             # HPE고객에서 사용하는 Nginx 서비스라는것을 알수있게 [고객명(name)-서비스명으로 생성] 
 replicaCount: 1                 
 
 image:
@@ -13,11 +13,11 @@ cpu:
   requests: 1
 
 memory: 
-  limits: 2000Mi                 # Mi, Gi 등 단위 설정해서 기입
-  requests: 1000Mi
+  limits: 4000Mi                 # Mi, Gi 등 단위 설정해서 기입
+  requests: 2000Mi
  
 volume:
-  name: it-tensorflow           # 생성할 볼륨 이름
+  name: ehost-tensorflow           # 생성할 볼륨 이름
   path: /data               # 마운트 경로 (ex. /usr/share/nginx)
   claim: tensor-volume     # PVC 이름
 
