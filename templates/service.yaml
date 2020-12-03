@@ -13,7 +13,7 @@ spec:
   - name: ssh
     port: {{ .Values.service.sshport }}         # 외부 노출 SSH포트
     protocol: TCP
-    targetPort: 40022
+    targetPort: 22
   - name: jupyter
     port: {{ .Values.service.jupyterport }}     # 외부 노출 주피터 노트북 포트
     protocol: TCP
