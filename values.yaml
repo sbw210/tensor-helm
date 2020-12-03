@@ -24,7 +24,7 @@ volume:
 ## Service Part ##  
 service:
   type: ""                   # service.yaml에 default값 LoadBalancer로 기입되어있음. 다른용도일시 변경필요.
-  sshport: 22                # 외부노출 ssh 포트 (포트포워딩용)
+  sshport: 40022                # 외부노출 ssh 포트 (포트포워딩용)
   jupyterport: 8888
   
 annotations:
