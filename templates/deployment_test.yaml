@@ -27,7 +27,7 @@ spec:
             memory: "{{ .Values.memory.limits }}"
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.sshport }}
+              port: {{ .Values.service.port }}
             initialDelaySeconds: 5
             periodSeconds: 5
         ports: 
