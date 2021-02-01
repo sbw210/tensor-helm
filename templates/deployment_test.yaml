@@ -53,6 +53,15 @@ spec:
         operator: {{ .Values. }}
         effect: {{ .Values. }}
       {{- else }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingExecution:
+            preference:
+            - matchExpressions:
+              - key: Nodetype
+                operator: In
+                values:
+                - CPU
       {{- end -}}
       volumes:
       - name: {{ .Values.volume.name }}             # 사용할 volume을 정의. 이름 생성 >> volumeMounts아래 필드에서 사용할 수 있도록 선언해줌
