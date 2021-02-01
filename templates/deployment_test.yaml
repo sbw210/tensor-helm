@@ -40,6 +40,8 @@ spec:
             mountPath: {{ .Values.volume.path }}     # 실제 생성하는 컨테이너안에서 확인 할 수 있는 Mount 경로    
       {{- if .Values.gpu.enabled }}                  # GPU 사용 enable 시, 노드어피니티 및 테인트/톨러레이션 사용
       {{- toYaml .Values.schedule | nindent 6 }}
+      nodeselector: 
+        nodetype: {{ .Values.gpu.type }}
       {{- else }}
       {{- toYaml .Values.noschedule | nindent 6 }}
       {{- end -}}
