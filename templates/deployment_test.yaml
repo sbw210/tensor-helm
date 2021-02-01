@@ -38,30 +38,10 @@ spec:
         volumeMounts:
           - name: {{ .Values.volume.name }}          # spec.template.volumes에서 선언한 볼륨 name을 컨테이너에 가져와서 사용
             mountPath: {{ .Values.volume.path }}     # 실제 생성하는 컨테이너안에서 확인 할 수 있는 Mount 경로    
-      {{- if .Values.GPU.enabled }}                  # GPU 사용 enable 시, 노드어피니티 및 테인트/톨러레이션 사용
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: Nodetype
-                operator: In
-                values:
-                - GPU
-      toleration:
-      - key: {{ .Values. }}
-        operator: {{ .Values. }}
-        effect: {{ .Values. }}
+      {{- if .Values.gpu.enabled }}                  # GPU 사용 enable 시, 노드어피니티 및 테인트/톨러레이션 사용
+      {{- toYaml .Values.gpu.schedule | nindent 6 }}
       {{- else }}
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingExecution:
-            preference:
-            - matchExpressions:
-              - key: Nodetype
-                operator: In
-                values:
-                - CPU
+      {{- toYaml .Values.gpu.noschedule | nindent 6 }}
       {{- end -}}
       volumes:
       - name: {{ .Values.volume.name }}             # 사용할 volume을 정의. 이름 생성 >> volumeMounts아래 필드에서 사용할 수 있도록 선언해줌
