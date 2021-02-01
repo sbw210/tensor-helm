@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Chart.Name }}                # Chart.Name은 서비스 용도 구분용/ Deployment 파드 간 구분 (서비스-tensorflow용 디플로이먼트오브젝트다)
+  name: {{ .Values.name }}                # 고객명 기입 (결과물은 Name : deployment.app/{Values.Name} 으로 확인가능)
+spec:
+  replicas: {{ .Values.replicaCount }}    # 복제본 개수 (default는 1로 설정)
+  selector:
+    matchLabels:
+      app: {{ .Values.label }}            # spec.selector.matchLabels 필드는 디플로이먼트가 관리할 Pod를 찾는 방법을 정의.
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.label }}          # 디플로이먼트에서 생성하는 Pod에 붙일 레이블명으로 위 spec.selector.matchLabels와 동일하게함
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository }}/{{ .Values.image.name | default .Chart.AppVersion }}"   # {Repository}/{이미지이름}으로 이미지명 초기값은 Chart.AppVersion을 따르도록 구성)
+        name: {{ .Values.name }}-{{ .Chart.Name }}              # 컨테이너에 붙을 이름. 결과적으로 {고객명}-{서비스용도}로 작성됨
+        imagePullPolicy: {{ .Values.image.pullPolicy }}         # 재생성시 이미지를 어떻게가져올것인지 규칙 선택
+        resources:
+          requests:                                   # resources의 cpu는 core(개) 단위로 보통 할당하지만 소숫점단위 0.x로도 가능
+            cpu: "{{ .Values.cpu.requests }}"         # resources의 memory는 단위를 지정해주는것이 보통 Mi or Gi
+            memory: "{{ .Values.memory.requests }}"
+          limits:
+            cpu: "{{ .Values.cpu.limits }}"
+            memory: "{{ .Values.memory.limits }}"
+        ports: 
+          - containerPort: 8888
+            name: jupyter                           ## 주피터 노트북 사용시 8888 포트도 오픈할것
+          - containerPort: 22
+            name: ssh
+        volumeMounts:
+          - name: {{ .Values.volume.name }}         # spec.template.volumes에서 선언한 볼륨 name을 컨테이너에 가져와서 사용
+            mountPath: {{ .Values.volume.path }}    # 실제 생성하는 컨테이너안에서 확인 할 수 있는 Mount 경로    
+      {{- if .Values.GPU.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: Nodetype
+                operator: In
+                values:
+                - GPU
+      toleration:
+      - key: {{ .Values.
+        operator: {{ .Values.
+        effect: {{ .Values.
+      {{- else }}
+      {{- end -}}
+      volumes:
+      - name: {{ .Values.volume.name }}             # 사용할 volume을 정의. 이름 생성 >> volumeMounts아래 필드에서 사용할 수 있도록 선언해줌
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default .Values.volume.claim }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
