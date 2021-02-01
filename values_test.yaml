@@ -21,7 +21,10 @@ volume:
   name: solis-tensorflow         # 생성할 볼륨 이름
   path: /data                    # 마운트 경로 (ex. /usr/share/nginx)
   claim: solis-tensor-volume     # PVC 이름
-  
+
+gpu: 
+  enabled: true                  # false 면 GPU노드 사용안하게!
+ 
 schedule:
   affinity:
     nodeAffinity:
@@ -57,8 +60,6 @@ service:
   
 annotations:
   group: gpu                    # 디폴트 Metal-lb  IP-pool은 default이며, --set옵션으로 변경가능
-
-
 
 
 ############# Persistent Volume Part 
