@@ -1,0 +1,75 @@
+############# Deployment Part
+name: solis                   # 고객구분을 위한 고객명으로 입력할것 (--set옵션으로 수정배포 가능)// 향후 네임스페이스명과 동일하게 갈것
+service: tensorflow           # HPE고객에서 사용하는 Nginx 서비스라는것을 알수있게 [고객명(name)-서비스명으로 생성] 
+replicaCount: 1                 
+
+image:
+  repository: jiyeon9569      # 가져올 Dockerhub repo명
+  pullPolicy: Always
+  name: tensorflow            # 디폴트값 없음. 필수 지정해줄것 (컨테이너 이미지 이름)
+  tag: ""
+
+cpu: 
+  limits: 2
+  requests: 1
+
+memory: 
+  limits: 4000Mi                 # Mi, Gi 등 단위 설정해서 기입
+  requests: 2000Mi
+ 
+volume:
+  name: solis-tensorflow         # 생성할 볼륨 이름
+  path: /data                    # 마운트 경로 (ex. /usr/share/nginx)
+  claim: solis-tensor-volume     # PVC 이름
+  
+schedule:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: Nodetype
+            operator: In
+            values:
+            - GPU
+ toleration:
+  - key: {{ .Values. }}
+    operator: {{ .Values. }}
+    effect: {{ .Values. }} 
+  
+noschedule:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingExecution:
+        preference:
+        - matchExpressions:
+          - key: Nodetype
+            operator: In
+            values:
+            - CPU
+
+############# Service Part
+service:
+  type: ""                      # service.yaml에 default값 LoadBalancer로 기입되어있음. 다른용도일시 변경필요.
+  sshport: 40022                # 외부노출 ssh 포트 (포트포워딩용)
+  jupyterport: 888
+  hcport: 22                    # 라이브니스프로브 포트
+  
+annotations:
+  group: gpu                    # 디폴트 Metal-lb  IP-pool은 default이며, --set옵션으로 변경가능
+
+
+
+
+############# Persistent Volume Part 
+persistence:
+  enabled: true
+    ## false면 pvc.yaml 실행 안함
+    ## StorageClass를 사용하고싶으면 주석해제 필요 
+    ## StorageClass값이 "-"이면 ""을 반환하고 동적프로비저닝을 금지시킴(disable)
+    ## StorageClass값을 입력해주면 해당 stc로 Bound될 것
+  # storageClass: "-"
+  storageClass: "rook-ceph-block"
+  accessMode: ReadWriteOnce
+  size: 2Gi
+ 
