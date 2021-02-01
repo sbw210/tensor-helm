@@ -25,7 +25,7 @@ volume:
 gpu: 
   enabled: true # false 면 GPU노드 사용안하게!
   type: 2080ti  # k80 등 레이블처리한 GPU 모델들중 쓸것기입
- 
+
 schedule:
   affinity:
     nodeAffinity:
@@ -36,7 +36,7 @@ schedule:
             operator: In
             values:
             - GPU
- toleration:
+  toleration:
   - key: 
     operator: 
     effect: 
