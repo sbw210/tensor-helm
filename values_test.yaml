@@ -23,7 +23,8 @@ volume:
   claim: solis-tensor-volume     # PVC 이름
 
 gpu: 
-  enabled: true                  # false 면 GPU노드 사용안하게!
+  enabled: true # false 면 GPU노드 사용안하게!
+  type: 2080ti  # k80 등 레이블처리한 GPU 모델들중 쓸것기입
  
 schedule:
   affinity:
@@ -36,9 +37,9 @@ schedule:
             values:
             - GPU
  toleration:
-  - key: {{ .Values. }}
-    operator: {{ .Values. }}
-    effect: {{ .Values. }} 
+  - key: 
+    operator: 
+    effect: 
   
 noschedule:
   affinity:
